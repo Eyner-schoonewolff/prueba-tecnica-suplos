@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-
+use Illuminate\Validation\ValidationException;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -37,17 +37,22 @@ class UserController extends Controller
 
             $validated = $request->validate([
                 'name' => 'required|max:255',
-                'email' => 'required|email|max:250',
+                'email' => 'required|email|max:250|unique:user,email',
+            ], [
+                'email.unique' => 'El correo electrónico ya está registrado. Por favor, elige otro.'
             ]);
 
             $user = new User($validated);
             $user->save();
 
             return redirect()->back()->with('success', 'Usuario Creado Correctamente.');
+            
+        } catch (ValidationException $e) {
+            return redirect()->back()->withErrors($e->errors())->withInput();
         } catch (\Illuminate\Database\QueryException $e) {
-            return response()->json(['error' => 'Database error: ' . $e->getMessage()], 500);
+            return redirect()->back()->with('error', 'Database error: ' . $e->getMessage());
         } catch (\Exception $e) {
-            return response()->json(['error' => 'An error occurred: ' . $e->getMessage()], 500);
+            return redirect()->back()->with('error', 'An error occurred: ' . $e->getMessage());
         }
     }
 }

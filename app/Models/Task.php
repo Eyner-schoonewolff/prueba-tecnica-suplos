@@ -7,9 +7,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Task extends Model
 {
-    use SoftDeletes; // Esto habilita la eliminación lógica en Laravel
+    use SoftDeletes; 
     protected $table = 'tasks';
-    // Define los campos de fechas
     protected $dates = ['deleted_at'];
     protected $fillable = ['title', 'description', 'user_id','completed'];
 
