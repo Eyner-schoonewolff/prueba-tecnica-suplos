@@ -14,11 +14,12 @@ class CreateTasksTable extends Migration
             $table->unsignedBigInteger('user_id'); // Relación con usuarios
             $table->string('title');
             $table->text('description');
-            $table->boolean('completed')->default(false); // Estado de la tarea (completada o no)
+            $table->boolean('completed')->default(false)->change(); // Estado de la tarea (completada o no)
+            $table->timestamp('deleted_at')->nullable(); // Fecha y hora de eliminación lógica
             $table->timestamps();
 
-            // Índice y clave foránea
-            $table->foreign('user_id')->references('id')->on('user')->onDelete('cascade');
+            // 
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('set null'); 
         });
     }
 

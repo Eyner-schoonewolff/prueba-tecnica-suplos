@@ -12,6 +12,7 @@ class CreateUsersTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('email', 191)->unique();
+            $table->timestamp('deleted_at')->nullable();
             $table->timestamps();
         });
     }
